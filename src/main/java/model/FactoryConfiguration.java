@@ -1,4 +1,4 @@
-package common;
+package model;
 
 import exceptions.ConfigurationException;
 
@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class Configuration
+public class FactoryConfiguration
 {
     private final Properties properties;
 
-    public Configuration(String configurationFileName) throws ConfigurationException
+    public FactoryConfiguration(String configurationFileName) throws ConfigurationException
     {
         properties = new Properties();
-        try (InputStream inputStream = Configuration.class.getResourceAsStream(configurationFileName))
+        try (InputStream inputStream = FactoryConfiguration.class.getResourceAsStream(configurationFileName))
         {
             properties.load(inputStream);
         }

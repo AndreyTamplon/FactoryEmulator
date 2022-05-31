@@ -1,7 +1,7 @@
-import common.Configuration;
 import controller.BasicController;
 import controller.Controller;
 import exceptions.ConfigurationException;
+import model.FactoryConfiguration;
 import model.FactoryTerminal;
 import model.employees.EmployeesTerminal;
 import model.employees.Supplier;
@@ -39,10 +39,10 @@ public class Application
             logger.log(Level.SEVERE, "Couldn't configure logger", e);
             return;
         }
-        Configuration configuration;
+        FactoryConfiguration factoryConfiguration;
         try
         {
-            configuration = new Configuration("/FactoryConfiguration.properties");
+            factoryConfiguration = new FactoryConfiguration("/FactoryConfiguration.properties");
         }
         catch (ConfigurationException e)
         {
@@ -50,28 +50,28 @@ public class Application
             return;
         }
         StorageTerminal storageTerminal = new StorageTerminal(
-                configuration.getBodyStorageSize(),
-                configuration.getAccessoryStorageSize(),
-                configuration.getCarStorageSize(),
-                configuration.getEngineStorageSize()
+                factoryConfiguration.getBodyStorageSize(),
+                factoryConfiguration.getAccessoryStorageSize(),
+                factoryConfiguration.getCarStorageSize(),
+                factoryConfiguration.getEngineStorageSize()
         );
         CarCreator carCreator = new CarCreator();
         AccessoriesCreator accessoriesCreator = new AccessoriesCreator();
         BodyCreator bodyCreator = new BodyCreator();
         EngineCreator engineCreator = new EngineCreator();
         AccessorySuppliersUnion accessorySuppliersUnion = new AccessorySuppliersUnion(
-                configuration.getNumberOfAccessorySuppliers(),
+                factoryConfiguration.getNumberOfAccessorySuppliers(),
                 1000,
                 storageTerminal,
                 accessoriesCreator
         );
         DealersUnion dealersUnion = new DealersUnion(
-                configuration.getNumberOfDealers(),
+                factoryConfiguration.getNumberOfDealers(),
                 1000,
                 storageTerminal,
-                configuration.isLoggingEnabled()
+                factoryConfiguration.isLoggingEnabled()
         );
-        WorkersUnion workersUnion = new WorkersUnion(configuration.getNumberOfWorkers(), storageTerminal, carCreator);
+        WorkersUnion workersUnion = new WorkersUnion(factoryConfiguration.getNumberOfWorkers(), storageTerminal, carCreator);
         Supplier<Body> bodySupplier = new Supplier<>(
                 "Body supplier",
                 1000,
